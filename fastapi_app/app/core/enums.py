@@ -1,0 +1,16 @@
+from enum import Enum
+
+class ErrorType(str, Enum):
+    VALIDATION_ERROR = "VALIDATION_ERROR"
+    DUPLICATION_ERROR = "DUPLICATION_ERROR"
+    NOT_FOUND_ERROR = "NOT_FOUND_ERROR"
+    AUTHENTICATION_ERROR = "AUTHENTICATION_ERROR",
+    AUTHORIZATION_ERROR = "AUTHORIZATION_ERROR"
+    FORBIDDEN_ERROR = "FORBIDDEN_ERROR"
+    INTERNAL_ERROR = "INTERNAL_ERROR"
+
+class PeriodEnum(str, Enum):
+    DAILY = "daily"
+    WEEKLY = "weekly"
+    MONTHLY = "monthly"
+    ANNUAL = "annual"
