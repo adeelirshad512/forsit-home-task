@@ -3,9 +3,9 @@ __pycache__/
 *.pyo
 *.pyd
 .Python
-env/
+# env/
 venv/
-.env
+# .env
 *.log
 .mypy_cache/
 .vscode/
