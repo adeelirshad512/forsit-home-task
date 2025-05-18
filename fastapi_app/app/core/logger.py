@@ -1,4 +1,3 @@
-# in app/core/logger.py
 import os
 import logging
 from logging.handlers import RotatingFileHandler
