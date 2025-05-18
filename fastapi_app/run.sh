@@ -15,6 +15,12 @@ if ! command -v python3 &> /dev/null || ! python3 --version | grep -q "3.10"; th
     exit 1
 fi
 
+if ! python3 -m venv --help > /dev/null 2>&1; then
+    echo "python3.10-venv not installed, installing..."
+    sudo apt update
+    sudo apt install -y python3.10-venv || { echo "Error: Failed to install python3.10-venv"; exit 1; }
+fi
+
 echo "Checking virtual environment..."
 FORCE_RECREATE=$1
 if [ -d "venv" ] && [ "$FORCE_RECREATE" != "--force" ]; then
@@ -23,16 +29,13 @@ else
     rm -rf venv
     python3 -m venv venv || { echo "Error: Failed to create virtual environment"; exit 1; }
 fi
+
 source venv/bin/activate || { echo "Error: Failed to activate virtual environment"; exit 1; }
 
 echo "Installing dependencies..."
 if [ -f "requirements.txt" ]; then
-    if [ -x "$(command -v venv/bin/pip)" ]; then
-        venv/bin/pip install --upgrade pip || { echo "Error: Failed to upgrade pip"; exit 1; }
-        venv/bin/pip install -r requirements.txt || { echo "Error: Failed to install requirements"; exit 1; }
-    else
-        echo "Warning: pip not executable, skipping dependency install"
-    fi
+    venv/bin/pip install --upgrade pip || { echo "Error: Failed to upgrade pip"; exit 1; }
+    venv/bin/pip install -r requirements.txt || { echo "Error: Failed to install requirements"; exit 1; }
 else
     echo "Error: requirements.txt not found"
     exit 1
