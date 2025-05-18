@@ -1,8 +1,7 @@
 #!/bin/bash
-
 set -e
 
-PROJECT_DIR="$(dirname "$(realpath "$0")")/../.."
+PROJECT_DIR="$(dirname "$(realpath "$0")")"
 
 if [ ! -d "$PROJECT_DIR" ]; then
     echo "Error: Project directory not found"
@@ -47,7 +46,6 @@ else
     echo "Using existing .env file"
 fi
 
-# Check ports and pick the first free one
 PORT=8000
 MAX_PORT=8010
 

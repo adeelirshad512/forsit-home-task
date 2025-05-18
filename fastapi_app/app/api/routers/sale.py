@@ -6,6 +6,7 @@ from app.api.schemas.sale import PageSaleResponse, SaleCreate, SaleResponse, Rev
 from app.api.services.sale import SaleService
 from app.core.response import ResponseModel, success_response, CustomResponse
 from datetime import datetime
+from app.core.auth import get_api_key
 
 router = APIRouter()
 
@@ -13,11 +14,19 @@ def get_sale_service(db: Session = Depends(get_db)) -> SaleService:
     return SaleService(db)
 
 @router.post("/", response_model=SaleResponse)
-def create_sale(sale: SaleCreate, sale_service: SaleService = Depends(get_sale_service)):
+def create_sale(
+    sale: SaleCreate,
+    sale_service: SaleService = Depends(get_sale_service),
+    api_key: str = Depends(get_api_key),
+):
     return sale_service.create_sale(sale)
 
 @router.get("/{sale_id}", response_model=SaleResponse)
-def get_sale(sale_id: int, sale_service: SaleService = Depends(get_sale_service)):
+def get_sale(
+    sale_id: int,
+    sale_service: SaleService = Depends(get_sale_service),
+    api_key: str = Depends(get_api_key),
+):
     return sale_service.get_sale(sale_id)
 
 @router.get("/", response_model=PageSaleResponse)
@@ -28,11 +37,10 @@ def get_sales(
     end_date: datetime | None = None,
     product_id: int | None = None,
     category: str | None = None,
-    sale_service: SaleService = Depends(get_sale_service)
+    sale_service: SaleService = Depends(get_sale_service),
+    api_key: str = Depends(get_api_key),
 ):
     return sale_service.get_sales(skip, limit, start_date, end_date, product_id, category)
-
-
 
 @router.get("/revenue/", response_model=ResponseModel[List[RevenueResponse]])
 def get_revenue(
@@ -41,6 +49,7 @@ def get_revenue(
     end_date: Optional[datetime] = None,
     category: Optional[str] = None,
     sale_service: SaleService = Depends(get_sale_service),
+    api_key: str = Depends(get_api_key),
 ):
     data = sale_service.get_revenue(period, start_date, end_date, category)
     return ResponseModel[List[RevenueResponse]](result=data)

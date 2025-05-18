@@ -25,7 +25,7 @@ class InventoryService:
                 status_code=status.HTTP_404_NOT_FOUND
             )
         inventory_data = inventory.model_dump()
-        inventory_data["product_id"] = product_id  # Add product_id to inventory_data
+        inventory_data["product_id"] = product_id 
         inventory_data["updated_at"] = datetime.now(timezone.utc)
 
         updated_inventory = self.inventory_query.update_inventory(inventory_data)
