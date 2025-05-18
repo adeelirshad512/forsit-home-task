@@ -23,34 +23,19 @@ fi
 
 echo "Checking virtual environment..."
 FORCE_RECREATE=$1
-<<<<<<< HEAD
-
-if [ "$FORCE_RECREATE" = "--force" ] || [ ! -f "venv/bin/activate" ]; then
-    echo "Creating fresh virtual environment..."
-    rm -rf venv
-    python3 -m venv venv || { echo "Error: Failed to create virtual environment"; exit 1; }
-else
-    echo "Virtual environment exists and looks valid, skipping creation"
-=======
 if [ -d "venv" ] && [ "$FORCE_RECREATE" != "--force" ]; then
     echo "Virtual environment exists, skipping creation"
 else
     rm -rf venv
     python3 -m venv venv || { echo "Error: Failed to create virtual environment"; exit 1; }
->>>>>>> f2767cc5707f55bf558a88ec19a1e0fb28184efd
 fi
 
 source venv/bin/activate || { echo "Error: Failed to activate virtual environment"; exit 1; }
 
 echo "Installing dependencies..."
 if [ -f "requirements.txt" ]; then
-<<<<<<< HEAD
-    pip install --upgrade pip || { echo "Error: Failed to upgrade pip"; exit 1; }
-    pip install -r requirements.txt || { echo "Error: Failed to install requirements"; exit 1; }
-=======
     venv/bin/pip install --upgrade pip || { echo "Error: Failed to upgrade pip"; exit 1; }
     venv/bin/pip install -r requirements.txt || { echo "Error: Failed to install requirements"; exit 1; }
->>>>>>> f2767cc5707f55bf558a88ec19a1e0fb28184efd
 else
     echo "Error: requirements.txt not found"
     exit 1
@@ -82,8 +67,4 @@ done
 
 echo "Starting FastAPI server on port $PORT..."
 echo "Press Ctrl+C to stop the server"
-<<<<<<< HEAD
 uvicorn app.main:app --host 0.0.0.0 --port $PORT || { echo "Error: Failed to start FastAPI server. Check app/logs/app.log"; exit 1; }
-=======
-uvicorn app.main:app --host 0.0.0.0 --port $PORT || { echo "Error: Failed to start FastAPI server. Check app/logs/app.log"; exit 1; }
->>>>>>> f2767cc5707f55bf558a88ec19a1e0fb28184efd
