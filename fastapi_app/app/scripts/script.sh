@@ -2,8 +2,7 @@
 
 set -e
 
-SCRIPT_DIR="$(dirname "$(realpath "$0")")"
-PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+PROJECT_DIR="$(dirname "$(realpath "$0")")/../.."
 
 if [ ! -d "$PROJECT_DIR" ]; then
     echo "Error: Project directory not found"
@@ -36,18 +35,35 @@ if [ -f "requirements.txt" ]; then
         echo "Warning: pip not executable, skipping dependency install"
     fi
 else
-    echo "Error: requirements.txt not found in $PROJECT_DIR"
+    echo "Error: requirements.txt not found"
     exit 1
 fi
 
 echo "Configuring environment..."
 if [ ! -f ".env" ]; then
-    echo "Error: .env file not found. Please create .env with DATABASE_URL and API_KEY in $PROJECT_DIR"
+    echo "Error: .env file not found. Please create .env with DATABASE_URL and API_KEY"
     exit 1
 else
     echo "Using existing .env file"
 fi
 
-echo "Starting FastAPI server..."
+# Check ports and pick the first free one
+PORT=8000
+MAX_PORT=8010
+
+function port_in_use() {
+    lsof -iTCP:"$1" -sTCP:LISTEN -t >/dev/null
+}
+
+while port_in_use $PORT; do
+    echo "Port $PORT is busy, trying next port..."
+    PORT=$((PORT + 1))
+    if [ $PORT -gt $MAX_PORT ]; then
+        echo "Error: No free port found between 8000 and $MAX_PORT"
+        exit 1
+    fi
+done
+
+echo "Starting FastAPI server on port $PORT..."
 echo "Press Ctrl+C to stop the server"
-uvicorn fastapi_app/app.main:app --host 0.0.0.0 --port 8000 || { echo "Error: Failed to start FastAPI server. Check fastapi_app/app/logs/app.log"; exit 1; }
+uvicorn app.main:app --host 0.0.0.0 --port $PORT || { echo "Error: Failed to start FastAPI server. Check app/logs/app.log"; exit 1; }
