@@ -46,7 +46,6 @@ else
     echo "Using existing .env file"
 fi
 
-# Check ports and pick the first free one
 PORT=8000
 MAX_PORT=8010
 
