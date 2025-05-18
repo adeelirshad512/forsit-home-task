@@ -1,8 +1,7 @@
 #!/bin/bash
-
 set -e
 
-PROJECT_DIR="$(dirname "$(realpath "$0")")/../.."
+PROJECT_DIR="$(dirname "$(realpath "$0")")"
 
 if [ ! -d "$PROJECT_DIR" ]; then
     echo "Error: Project directory not found"
